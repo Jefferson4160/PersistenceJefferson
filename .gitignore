@@ -1,0 +1,58 @@
+# Arquivos e diretórios gerados pelo Maven
+/target/
+pom.xml.tag
+pom.xml.next
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.stacktrace
+release.properties
+dependency-reduced-pom.xml
+build/
+dist/
+
+# Logs
+*.log
+logs/
+
+# Ignorar o diretório do NetBeans (gerado pela IDE)
+/nbproject/private/
+/nbbuild/
+/dist/
+/nb-configuration.xml
+*.nbattrs
+
+# Ignorar arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*
+*.tmp
+
+# Ignorar arquivos de IDEs (se usar outras ou o projeto for compartilhado)
+.idea/             # IntelliJ IDEA
+.vscode/           # VS Code
+*.iml              # IntelliJ IDEA module files
+*.ipr
+*.iws
+
+# Ignorar arquivos de classe Java
+*.class
+
+# Ignorar arquivos de package (jars, wars, ears, etc.)
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Ignorar dados de banco de dados locais ou arquivos sensíveis
+*.db
+*.sqlite
+*.mv.db
+*.trace.db
+*.properties.bak
+*.xml.bak
+
+# Ignorar o repositório Maven local no projeto (se configurado de forma não padrão)
+# /.m2/
