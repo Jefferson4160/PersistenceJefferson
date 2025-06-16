@@ -4,6 +4,8 @@
  */
 package br.com.ifba.curso.view;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ADMIN
@@ -44,6 +46,11 @@ public class AdicionarCurso extends javax.swing.JDialog {
         jLabel1.setText("ADICIONAR NOVO CURSO");
 
         btnAdicionar.setText("Adicionar");
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -107,6 +114,14 @@ public class AdicionarCurso extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Novo curso salvo com sucesso.");
+        //Por hora somente para limprar os campos após clicar no botão
+        txtCodigo.setText("");
+        txtNome.setText("");
+    }//GEN-LAST:event_btnAdicionarActionPerformed
 
     /**
      * @param args the command line arguments
