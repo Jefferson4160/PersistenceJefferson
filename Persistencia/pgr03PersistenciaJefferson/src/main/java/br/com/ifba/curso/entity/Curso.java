@@ -17,14 +17,15 @@ import jakarta.persistence.Id;
 @Entity
 public class Curso {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     private String nome;
     @Column(name = "codigo_curso", nullable = false, unique = true, length = 255)
     private String codigoCurso;
     private boolean ativo;
-
+    
+    
     
     //getters e setters
     public Long getId() {

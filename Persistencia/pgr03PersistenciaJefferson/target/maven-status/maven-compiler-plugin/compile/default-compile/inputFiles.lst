@@ -1,6 +1,10 @@
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\CursoSave.java
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\CursoListar.java
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\AdicionarCurso.java
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\renderer\Redenrizador.java
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\EditarCurso.java
-I:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\entity\Curso.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\find\CursoFind.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\EditarCurso.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\renderer\Redenrizador.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\remove\CursoDelete.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\merge\CursoUpdate.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\CursoListar.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\view\AdicionarCurso.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\CursoSave.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\entity\Curso.java
+G:\Meu Drive\POO_persistence\Persistencia\pgr03PersistenciaJefferson\src\main\java\br\com\ifba\curso\save\CursoSave.java
