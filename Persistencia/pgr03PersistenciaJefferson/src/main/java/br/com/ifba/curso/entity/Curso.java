@@ -4,38 +4,31 @@
  */
 package br.com.ifba.curso.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 
 /**
  *
  * @author ADMIN
  */
 @Entity
-public class Curso {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+@Table(name = "curso")
+public class Curso extends PersistenceEntity {
+    //Impede que o BD salve um curso sem nome
+    @Column(name = "nome", nullable = false)
     private String nome;
+    //como o nome é composto no BD é criado com _ e colocamos igual na anotação. não pode ser vazio e deve ser unico
     @Column(name = "codigo_curso", nullable = false, unique = true, length = 255)
     private String codigoCurso;
+    @Column(name = "ativo")
     private boolean ativo;
     
     
     
     //getters e setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNome() {
         return nome;
     }

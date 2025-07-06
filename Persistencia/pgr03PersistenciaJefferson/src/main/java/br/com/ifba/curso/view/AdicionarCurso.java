@@ -4,6 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.dao.CursoDao;
+import br.com.ifba.curso.dao.CursoIDao;
+import br.com.ifba.curso.entity.Curso;
 import javax.swing.JOptionPane;
 
 /**
@@ -117,6 +120,16 @@ public class AdicionarCurso extends javax.swing.JDialog {
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         // TODO add your handling code here:
+        //Instancio o objeto do tipo curso e empacoto as informações
+        Curso curso = new Curso();
+        curso.setNome(txtNome.getText());
+        curso.setCodigoCurso(txtCodigo.getText());
+        curso.setAtivo(true);
+        
+        //instancio um objeto do tipo cursoDao para poder usar os metodos do genericDao e salvar 
+        CursoIDao cursoDao = new CursoDao();
+        cursoDao.save(curso);
+        
         JOptionPane.showMessageDialog(this, "Novo curso salvo com sucesso.");
         //Por hora somente para limprar os campos após clicar no botão
         txtCodigo.setText("");

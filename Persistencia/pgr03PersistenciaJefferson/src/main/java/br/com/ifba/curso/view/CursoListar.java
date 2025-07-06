@@ -4,11 +4,14 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.dao.CursoDao;
+import br.com.ifba.curso.entity.Curso;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import br.com.ifba.curso.view.renderer.Redenrizador;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,12 +21,14 @@ import javax.swing.JOptionPane;
 public class CursoListar extends javax.swing.JFrame {
     
     private DefaultTableModel modeloTabelaProdutos;
+    private CursoDao cursoDao;
     /**
      * Creates new form CursoListar
      */
     public CursoListar() {
         initComponents();
         
+        cursoDao = new CursoDao();
         //Configuração do modelo de tabela
         //Definindo o nome das colunas
         String[] nomeColunas = {"ID","Curso","Cod.","Ativo","Remover","Editar"};
@@ -83,8 +88,39 @@ public class CursoListar extends javax.swing.JFrame {
             }
         }
     });
+        carregarCursosNaTabela();
             
     }
+    
+    private void carregarCursosNaTabela() {
+    // Limpa todas as linhas existentes na tabela antes de adicionar as novas
+    modeloTabelaProdutos.setRowCount(0);
+
+    try {
+        // Usa o DAO para buscar a lista de todos os cursos do banco de dados
+        List<Curso> cursos = cursoDao.findAll();
+
+        // Itera sobre a lista de cursos e adiciona cada um como uma nova linha na tabela
+        if (cursos != null && !cursos.isEmpty()) {
+            for (Curso curso : cursos) {
+                modeloTabelaProdutos.addRow(new Object[]{
+                    curso.getId(),
+                    curso.getNome(),
+                    curso.getCodigoCurso(),
+                    curso.isAtivo(),
+                    "Remover", // Placeholder para o renderizador de imagem
+                    "Editar"   // Placeholder para o renderizador de imagem
+                });
+            }
+        } else {
+            System.out.println("Nenhum curso encontrado no banco de dados.");
+        }
+
+    } catch (RuntimeException e) { // Captura a RuntimeException relançada pelo DAO
+        JOptionPane.showMessageDialog(this, "Erro ao carregar cursos: " + e.getMessage(), "Erro de Banco de Dados", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
     
     private void abrirTelaEdicao(int row) { // Agora o método recebe a linha clicada
         System.out.println("Chamando tela de edição para a linha: " + (row + 1));
