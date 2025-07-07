@@ -126,7 +126,7 @@ public class GenericDao<Entity extends PersistenceEntity> implements GenericIDao
                 System.out.println("Entidade com ID "+ id + "nao encontrada");
             }
         }catch(Exception e){
-            
+            throw new RuntimeException("Falha ao realizar busca", e);
         }
         return entidadeEncontrada;
     }
