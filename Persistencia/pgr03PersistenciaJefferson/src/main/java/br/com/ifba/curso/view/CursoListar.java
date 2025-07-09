@@ -4,7 +4,10 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.dao.CursoDao;
+
+
+import br.com.ifba.curso.controller.CursoIController;
+import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.entity.Curso;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -21,14 +24,14 @@ import javax.swing.JOptionPane;
 public class CursoListar extends javax.swing.JFrame {
     
     private DefaultTableModel modeloTabelaProdutos;
-    private CursoDao cursoDao;
+    private CursoIController cursoController;
     /**
      * Creates new form CursoListar
      */
     public CursoListar() {
         initComponents();
         
-        cursoDao = new CursoDao();
+        cursoController = new CursoController();
         //Configuração do modelo de tabela
         //Definindo o nome das colunas
         String[] nomeColunas = {"ID","Curso","Cod.","Ativo","Remover","Editar"};
@@ -67,23 +70,43 @@ public class CursoListar extends javax.swing.JFrame {
                 String clickedColumnName = tblCursos.getColumnName(column);
 
                 if (clickedColumnName.equals("Remover")) {
+                    //Obtenho o Id da linha clicada
+                    Long cursoId = (Long) modeloTabelaProdutos.getValueAt(row, 0);
+                    
                     System.out.println("Ícone REMOVER clicado na linha: " + row);
                     int confirm = JOptionPane.showConfirmDialog(CursoListar.this,
-                            "Tem certeza que deseja excluir o item da linha " + (row + 1) + "?",
+                            "Tem certeza que deseja excluir o item de ID " + cursoId + "?",
                             "Confirmar Exclusão",
                             JOptionPane.YES_NO_OPTION);
 
                     if (confirm == JOptionPane.YES_OPTION) {
-                        JOptionPane.showMessageDialog(rootPane, "Iten excluido com sucesso");
-                        System.out.println("Usuário confirmou exclusão da linha: " + (row + 1));
+                        
+                        
+                        try{
+                            //Uso o construtor quem tem somente o id para passar para o controller
+                            Curso cursoParaRemover = new Curso(cursoId);
+                            //Chamo o metodo do controller
+                            cursoController.delete(cursoParaRemover);
+                            
+                            modeloTabelaProdutos.removeRow(row);//tiro a linha do item excluido
+                            JOptionPane.showMessageDialog(rootPane, "Iten excluido com sucesso");
+                            System.out.println("Usuário confirmou exclusão da linha: " + (row + 1));
+                        }catch (RuntimeException ex){
+                            JOptionPane.showMessageDialog(rootPane, "Erro ao excluir: " + ex.getMessage());
+                            ex.printStackTrace();
+                            System.out.println("Usuário tentou excluir, mas houve erro na linha: " + (row + 1));
+                        }
+                        
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Exclusão cancelada");
                         System.out.println("Usuário CANCELOU exclusão da linha: " + (row + 1));
                     }
                 } else if (clickedColumnName.equals("Editar")) {
                     System.out.println("Ícone EDITAR clicado na linha: " + row);
+                    Long cursoId = (Long) tblCursos.getModel().getValueAt(row, 0);//pega o id da linha clicada
                     // CHAME O MÉTODO PARA ABRIR A TELA EditarCurso AQUI
-                    abrirTelaEdicao(row); //abro a tela de edição passando o numero da linha
+                    abrirTelaEdicao(cursoId); //abro a tela de edição passando o numero da linha
+                    
                 }
             }
         }
@@ -97,8 +120,8 @@ public class CursoListar extends javax.swing.JFrame {
     modeloTabelaProdutos.setRowCount(0);
 
     try {
-        // Usa o DAO para buscar a lista de todos os cursos do banco de dados
-        List<Curso> cursos = cursoDao.findAll();
+        // Agora faço a conecção com o controller e ele chama o resto
+        List<Curso> cursos = cursoController.findAll();
 
         // Itera sobre a lista de cursos e adiciona cada um como uma nova linha na tabela
         if (cursos != null && !cursos.isEmpty()) {
@@ -122,21 +145,18 @@ public class CursoListar extends javax.swing.JFrame {
     }
 }
     
-    private void abrirTelaEdicao(int row) { // Agora o método recebe a linha clicada
-        System.out.println("Chamando tela de edição para a linha: " + (row + 1));
-        // Instancia a sua JDialog EditarCurso
-        // 'this' refere-se à instância atual de CursoListar (o JFrame pai)
-        // 'true' torna o diálogo modal (bloqueia a tela pai até ser fechado)
-        EditarCurso telaEdicao = new EditarCurso(this, true);
+    private void abrirTelaEdicao(Long idCurso) { // Agora o método recebe a linha clicada
+        System.out.println("Chamando tela de edição para o Curso ID: " + idCurso);
 
-        // Opcional: Centralizar o diálogo em relação à tela pai
+        // AQUI: Certifique-se de que o ID está sendo passado para o construtor de EditarCurso
+        // que aceita 3 parâmetros (parent, modal, idCurso).
+        EditarCurso telaEdicao = new EditarCurso(this, true, idCurso); // <--- GARANTA ESTA LINHA ESTÁ ASSIM
+
         telaEdicao.setLocationRelativeTo(this);
-
-        // Torna o diálogo visível
         telaEdicao.setVisible(true);
-
-        // Esta linha só será executada DEPOIS que a telaEdicao for fechada
         System.out.println("Tela de Edição (EditarCurso) foi fechada.");
+        carregarCursosNaTabela(); // Recarrega a tabela após o fechamento
+        
     }
     
 
@@ -217,6 +237,8 @@ public class CursoListar extends javax.swing.JFrame {
         telaAdicao.setLocationRelativeTo(this);
         //comando para tornar a janela visivel
         telaAdicao.setVisible(true);
+        //atualiza a tabela
+        carregarCursosNaTabela();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     /**

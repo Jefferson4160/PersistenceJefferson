@@ -26,8 +26,20 @@ public class Curso extends PersistenceEntity {
     @Column(name = "ativo")
     private boolean ativo;
     
-    
-    
+    public Curso(){
+        
+    }
+     // Construtor completo
+    public Curso(String nome, String codigoCurso, boolean ativo) {
+        this.nome = nome;
+        this.codigoCurso = codigoCurso;
+        this.ativo = ativo;
+    }
+
+    // Para usar no delete e no findById
+    public Curso(Long id) {
+        super.setId(id); // Assume que setId é herdado de PersistenceEntity
+    }
     //getters e setters
     public String getNome() {
         return nome;

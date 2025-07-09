@@ -4,8 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
+
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import javax.swing.JOptionPane;
 
@@ -14,13 +15,15 @@ import javax.swing.JOptionPane;
  * @author ADMIN
  */
 public class AdicionarCurso extends javax.swing.JDialog {
-
+    
+    private CursoIController cursoController;
     /**
      * Creates new form AdicionarCurso
      */
     public AdicionarCurso(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.cursoController = new CursoController();
     }
 
     /**
@@ -119,21 +122,32 @@ public class AdicionarCurso extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        // TODO add your handling code here:
-        //Instancio o objeto do tipo curso e empacoto as informações
-        Curso curso = new Curso();
-        curso.setNome(txtNome.getText());
-        curso.setCodigoCurso(txtCodigo.getText());
-        curso.setAtivo(true);
         
-        //instancio um objeto do tipo cursoDao para poder usar os metodos do genericDao e salvar 
-        CursoIDao cursoDao = new CursoDao();
-        cursoDao.save(curso);
+        //Coleto as informações da tela
+        String nome = txtNome.getText();
+        String codigo = txtCodigo.getText();
+        boolean ativo = true;
         
-        JOptionPane.showMessageDialog(this, "Novo curso salvo com sucesso.");
-        //Por hora somente para limprar os campos após clicar no botão
-        txtCodigo.setText("");
-        txtNome.setText("");
+        try{
+            //empacoto as informações para passar para próxima camada
+            Curso novoCurso = new Curso();
+            novoCurso.setNome(nome);
+            novoCurso.setCodigoCurso(codigo);
+            novoCurso.setAtivo(ativo);
+            
+            //A partir daqui o controller dará destino ao objeto
+            cursoController.save(novoCurso);
+            JOptionPane.showMessageDialog(this, "Novo curso salvo com sucesso.");
+            
+            //Para limprar os campos após clicar no botão
+            txtCodigo.setText("");
+            txtNome.setText("");
+            
+        } catch (RuntimeException e){
+            JOptionPane.showMessageDialog(this, "Erro ao salvar curso: "+e.getMessage());
+        }
+        
+        
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     /**

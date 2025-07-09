@@ -4,6 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
+import br.com.ifba.curso.entity.Curso;
 import javax.swing.JOptionPane;
 
 /**
@@ -11,15 +14,61 @@ import javax.swing.JOptionPane;
  * @author ADMIN
  */
 public class EditarCurso extends javax.swing.JDialog {
-
+    
+    private CursoIController cursoController; //relação com o controller
+    private Long cursoIdAtual; //variavel para guardar o id do curso em edição
     /**
      * Creates new form EditarCurso
      */
     public EditarCurso(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.cursoController = new CursoController();
+        setLocationRelativeTo(parent);
+        this.cursoIdAtual = null;
+        
     }
+    //Novo construtor para abrir a tela de edição com um curso especifico
+    public EditarCurso(java.awt.Frame parent, boolean modal, Long idCurso) {
+        super(parent, modal);
+        initComponents();
+        this.cursoController = new CursoController(); // Instancia o Controller
+        this.cursoIdAtual = idCurso; // Guarda o ID do curso que será editado
+        setLocationRelativeTo(parent);
 
+        // Carregar os dados do curso nos campos da tela se um ID foi fornecido
+        if (this.cursoIdAtual != null) {
+            carregarDadosCursoParaEdicao(this.cursoIdAtual); // Chama o método para preencher os campos
+        }
+    }
+    
+    private void carregarDadosCursoParaEdicao(Long id) {
+    try {
+        // Usa o Controller para buscar o curso pelo ID
+        Curso curso = cursoController.findById(id);
+        if (curso != null) {
+            // Preenche os campos da tela com os dados do curso
+            txtNome.setText(curso.getNome());
+            txtCodigo.setText(curso.getCodigoCurso());
+
+            // Preenche o JComboBox 'boxEstado' com base no status 'ativo'
+            if (curso.isAtivo()) {
+                boxEstado.setSelectedItem("ATIVO");
+            } else {
+                boxEstado.setSelectedItem("INATIVO");
+            }
+        } else {
+            // Se o curso não for encontrado, avisa e fecha.
+            JOptionPane.showMessageDialog(this, "Curso não encontrado para edição (ID: " + id + ").", "Erro", JOptionPane.ERROR_MESSAGE);
+            this.dispose(); // Fecha a tela
+        }
+    } catch (RuntimeException ex) {
+        
+        JOptionPane.showMessageDialog(this, "Erro ao carregar dados do curso para edição: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+        this.dispose(); // Fecha a tela em caso de erro
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,17 +177,49 @@ public class EditarCurso extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        // TODO add your handling code here:
+        // 1. Coletar os dados dos campos da tela
+    String nome = txtNome.getText();
+    String codigo = txtCodigo.getText();
+    // Pega o status do JComboBox
+    boolean ativo = boxEstado.getSelectedItem().equals("ATIVO");
+
+    // 2. Validação básica de campos vazios (o Service fará validações mais robustas)
+    if (nome.isEmpty() || codigo.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Nome e Código do Curso são obrigatórios.", "Validação", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    try {
+        // 3. Criar uma instância da entidade Curso com os novos dados
+        Curso cursoParaOperacao = new Curso(); // Certifique-se de ter um construtor vazio em Curso
+        cursoParaOperacao.setNome(nome);
+        cursoParaOperacao.setCodigoCurso(codigo);
+        cursoParaOperacao.setAtivo(ativo);
+
+        // 4. Lógica de SAVE ou UPDATE com base em 'cursoIdAtual'
+        if (cursoIdAtual == null) { // Se cursoIdAtual é nulo, é um NOVO cadastro
+            cursoController.save(cursoParaOperacao); // Chama o save do Controller
+            JOptionPane.showMessageDialog(this, "Curso salvo com sucesso!");
+        } else { // Se cursoIdAtual não é nulo, é uma ATUALIZAÇÃO
+            cursoParaOperacao.setId(cursoIdAtual); // Define o ID no objeto para atualização
+            cursoController.update(cursoParaOperacao); // Chama o update do Controller
+            JOptionPane.showMessageDialog(this, "Curso atualizado com sucesso!");
+        }
+
+        this.dispose(); // Fecha a janela após a operação ser concluída com sucesso
+
+    } catch (RuntimeException ex) {
+        // Captura qualquer RuntimeException (ou subclasse) que o Controller relance.
+        JOptionPane.showMessageDialog(this, "Erro na operação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace(); // Imprime o stack trace completo para depuração
+    }
         
-        JOptionPane.showMessageDialog(this, "Edição realizada com sucesso.");
-        this.dispose();
+        
         
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        //fecha a tela
-        JOptionPane.showMessageDialog(this, "Edição cancelada, nenhuma alteração salva.");
+        JOptionPane.showMessageDialog(this, "Edição realizada com sucesso.");
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
