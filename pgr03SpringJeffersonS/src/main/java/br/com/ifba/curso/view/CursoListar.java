@@ -212,7 +212,7 @@ public class CursoListar extends javax.swing.JFrame {
         System.out.println("Termo de busca não é um ID, tentando buscar por nome...");
         try {
             // Usa o Controller para buscar por nome
-            List<Curso> cursosEncontrados = cursoController.findByName(termoBusca);
+            List<Curso> cursosEncontrados = cursoController.findByNameIgnoreCase(termoBusca);
 
             if (cursosEncontrados != null && !cursosEncontrados.isEmpty()) {
                 for (Curso curso : cursosEncontrados) {

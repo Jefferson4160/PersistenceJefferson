@@ -4,9 +4,9 @@
  */
 package br.com.ifba.curso.service;
 
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
+
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.repository.CursoRepository;
 import br.com.ifba.infrastructure.util.StringUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class CursoService implements CursoIService {
     
     //Objeto quue vou usar
     @Autowired
-    private CursoIDao cursoDao;
+    private CursoRepository cursoRepository;
     
     //Metodos do objeto em questão
     @Override
@@ -31,7 +31,7 @@ public class CursoService implements CursoIService {
         
         try{
             //Delega o trabalho de salvar o curso ao metodo do DAO
-            return cursoDao.save(curso);
+            return cursoRepository.save(curso);
         }catch (RuntimeException e){
             //Dessa forma lanço o erro com a sua mensagem mais especifica com o e.getMessage e mantenho o histórico passando o "e"
             throw new RuntimeException("Erro no service ao salvar o curso: "+e.getMessage(), e);
@@ -44,7 +44,7 @@ public class CursoService implements CursoIService {
         //agora passo true pois é um update
         validarCurso(curso, true);
         //Verifico se o curso esta no BD
-        Curso cursoExistente = cursoDao.findById(curso.getId());
+        Curso cursoExistente = cursoRepository.findById(curso.getId()).orElse(null);
         if(cursoExistente == null){
             throw new RuntimeException("Curso com ID"+curso.getId()+" nao encontrado");
         }
@@ -54,7 +54,7 @@ public class CursoService implements CursoIService {
         cursoExistente.setAtivo(curso.isAtivo());
     
         try {
-            return cursoDao.update(cursoExistente); // Chama o método update do DAO.
+            return cursoRepository.save(cursoExistente);
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro no service ao atualizar o curso: " + e.getMessage(), e);
         }
@@ -63,13 +63,13 @@ public class CursoService implements CursoIService {
     @Override
     public void delete(Curso curso) {
         //Verifico se o curso esta no BD
-        Curso cursoExistente = cursoDao.findById(curso.getId());
+        Curso cursoExistente = cursoRepository.findById(curso.getId()).orElse(null);
         if(cursoExistente == null){
             throw new RuntimeException("Curso com ID"+curso.getId()+" nao encontrado");
         }
         
         try {
-            cursoDao.delete(cursoExistente);//faço a remoção
+            cursoRepository.delete(cursoExistente);//faço a remoção
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro no service ao remover o curso: " + e.getMessage(), e);
         }
@@ -79,7 +79,7 @@ public class CursoService implements CursoIService {
     public List<Curso> findAll() {
         //simplesmente busco tudo que houver e retorno
         try {
-            return cursoDao.findAll();
+            return cursoRepository.findAll();
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro no service ao listar todos os cursos: " + e.getMessage(), e);
         }
@@ -91,21 +91,21 @@ public class CursoService implements CursoIService {
             throw new IllegalArgumentException("ID do curso não pode ser nulo para busca.");
         }
         try {
-            return cursoDao.findById(id);
+            return cursoRepository.findById(id).orElse(null);
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro no service ao buscar curso por ID: " + e.getMessage(), e);
         }
     }
     
     @Override
-    public List<Curso> findByName(String name) throws RuntimeException {
+    public List<Curso> findByNameIgnoreCase(String name) throws RuntimeException {
         if (StringUtil.isNullOrEmpty(name)) {
             // Se a busca for vazia, retorne todos os cursos (ou lance erro, dependendo da regra)
             return findAll(); // Pode ser findAll() se o requisito for listar todos quando a busca é vazia
             // Ou: throw new IllegalArgumentException("O termo de busca por nome não pode ser vazio.");
         }
         try {
-            return cursoDao.findByName(name); // Delega para o DAO
+            return cursoRepository.findByNomeContainingIgnoreCase(name); // Delega para o DAO
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro no service ao buscar cursos por nome: " + e.getMessage(), e);
         }

@@ -23,6 +23,6 @@ public interface CursoIController {
     
     List<Curso> findAll();
     
-    List<Curso> findByName(String name);
+    List<Curso> findByNameIgnoreCase(String name);
     
 }

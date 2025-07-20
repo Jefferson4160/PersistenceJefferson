@@ -25,5 +25,5 @@ public interface CursoIService {
    
    Curso findById(Long id);
    
-   List<Curso> findByName(String name);
+   List<Curso> findByNameIgnoreCase(String name);
 }

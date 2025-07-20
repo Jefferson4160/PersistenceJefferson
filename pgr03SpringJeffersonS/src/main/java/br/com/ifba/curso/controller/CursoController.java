@@ -80,9 +80,9 @@ public class CursoController implements CursoIController{
     }
 
     @Override
-    public List<Curso> findByName(String name) throws RuntimeException {
+    public List<Curso> findByNameIgnoreCase(String name) throws RuntimeException {
         try {
-            return cursoService.findByName(name); // Delega para o Serviço
+            return cursoService.findByNameIgnoreCase(name); // Delega para o Serviço
         } catch (RuntimeException e) {
             throw e;
         }
