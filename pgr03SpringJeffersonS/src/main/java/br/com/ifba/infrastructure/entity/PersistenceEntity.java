@@ -8,22 +8,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author Jefferson S
  */
 @MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor
 public class PersistenceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    public Long getId(){
-        return id;
-    }
+    //Remoção do construtor e dos setters e getters, todos gerenciados pelo lombook agr
     
-    public void setId(Long id){
-        this.id = id;
-    }
 }

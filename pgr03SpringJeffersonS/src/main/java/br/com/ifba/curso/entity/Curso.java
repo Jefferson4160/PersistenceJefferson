@@ -8,6 +8,11 @@ import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 
 
 /**
@@ -16,6 +21,10 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "curso")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Curso extends PersistenceEntity {
     //Impede que o BD salve um curso sem nome
     @Column(name = "nome", nullable = false)
@@ -26,45 +35,11 @@ public class Curso extends PersistenceEntity {
     @Column(name = "ativo")
     private boolean ativo;
     
-    public Curso(){
-        
-    }
-     // Construtor completo
-    public Curso(String nome, String codigoCurso, boolean ativo) {
-        this.nome = nome;
-        this.codigoCurso = codigoCurso;
-        this.ativo = ativo;
-    }
-
+    //Mantenho somente esse construtor especifico
     // Para usar no delete e no findById
     public Curso(Long id) {
         super.setId(id); // Assume que setId é herdado de PersistenceEntity
     }
-    //getters e setters
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCodigoCurso() {
-        return codigoCurso;
-    }
-
-    public void setCodigoCurso(String codigoCurso) {
-        this.codigoCurso = codigoCurso;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-    
-    
+    //getters e setters removidos
     
 }

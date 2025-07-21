@@ -8,19 +8,21 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.service.CursoIService;
 import br.com.ifba.curso.service.CursoService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired; remoção deste
 import org.springframework.stereotype.Controller;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
  * @author Jefferson S
  */
 @Controller
+@RequiredArgsConstructor
 public class CursoController implements CursoIController{
     
     // Faço a relação com o service, para fazer as chamadas
-    @Autowired
-    private CursoIService cursoService; 
+    //@Autowired
+    private final CursoIService cursoService; 
 
     
     // --- Métodos implementados da interface CursoIController ---

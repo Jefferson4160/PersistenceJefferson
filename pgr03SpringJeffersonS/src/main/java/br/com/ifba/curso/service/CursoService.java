@@ -9,19 +9,24 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.repository.CursoRepository;
 import br.com.ifba.infrastructure.util.StringUtil;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
  * @author ADMIN
  */
 @Service //anotação para o Spring
+@RequiredArgsConstructor //Gera construtor para injeção de dependencia
+@Slf4j //Criar um logger
 public class CursoService implements CursoIService {
     
     //Objeto quue vou usar
-    @Autowired
-    private CursoRepository cursoRepository;
+    //@Autowired - remoção desta linha
+    private final CursoRepository cursoRepository;
+    
+    
     
     //Metodos do objeto em questão
     @Override
@@ -30,11 +35,17 @@ public class CursoService implements CursoIService {
         validarCurso(curso, false);
         
         try{
+             //salvando o log
+            log.info("Salvando novo curso: {}", curso.getNome());
             //Delega o trabalho de salvar o curso ao metodo do DAO
             return cursoRepository.save(curso);
+           
         }catch (RuntimeException e){
+            //log de erro
+            log.error("Erro ao salvar curso: {}", e.getMessage(), e);
             //Dessa forma lanço o erro com a sua mensagem mais especifica com o e.getMessage e mantenho o histórico passando o "e"
             throw new RuntimeException("Erro no service ao salvar o curso: "+e.getMessage(), e);
+            
         }
         
     }
@@ -54,8 +65,10 @@ public class CursoService implements CursoIService {
         cursoExistente.setAtivo(curso.isAtivo());
     
         try {
+            log.info("Atualizando curso com ID: {}", curso.getId());
             return cursoRepository.save(cursoExistente);
         } catch (RuntimeException e) {
+            log.error("Erro ao atualizar curso com ID {}: {}", curso.getId(), e.getMessage(), e);
             throw new RuntimeException("Erro no service ao atualizar o curso: " + e.getMessage(), e);
         }
     }
@@ -69,8 +82,10 @@ public class CursoService implements CursoIService {
         }
         
         try {
+            log.info("Removendo curso com ID: {}", curso.getId());
             cursoRepository.delete(cursoExistente);//faço a remoção
         } catch (RuntimeException e) {
+            log.error("Erro ao remover curso com ID {}: {}", curso.getId(), e.getMessage(), e);
             throw new RuntimeException("Erro no service ao remover o curso: " + e.getMessage(), e);
         }
     }
@@ -79,8 +94,10 @@ public class CursoService implements CursoIService {
     public List<Curso> findAll() {
         //simplesmente busco tudo que houver e retorno
         try {
+            log.debug("Listando todos os cursos...");
             return cursoRepository.findAll();
         } catch (RuntimeException e) {
+             log.error("Erro ao listar todos os cursos: {}", e.getMessage(), e);
             throw new RuntimeException("Erro no service ao listar todos os cursos: " + e.getMessage(), e);
         }
     }
@@ -91,8 +108,10 @@ public class CursoService implements CursoIService {
             throw new IllegalArgumentException("ID do curso não pode ser nulo para busca.");
         }
         try {
+            log.debug("Buscando curso por ID: {}", id);
             return cursoRepository.findById(id).orElse(null);
         } catch (RuntimeException e) {
+            log.error("Erro ao buscar curso por ID {}: {}", id, e.getMessage(), e);
             throw new RuntimeException("Erro no service ao buscar curso por ID: " + e.getMessage(), e);
         }
     }
